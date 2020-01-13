@@ -1,9 +1,8 @@
 /*===========================================================================
-  SORTABLE TABLES by Inventive Labs
-  * Uses Prototype 1.5+ (http://prototype.conio.net/)
+  SORTABLE TABLES in plain JS
 
-  Sort a table by clicking on a column heading. To make a table sortable,
-  give it a class of 'sortable':
+  Sort a table by clicking on a column heading.
+  To make a table sortable, call SortableTable.find('table.sortable');
 
   <table class="sortable">
     <tr>
@@ -17,31 +16,34 @@
   The 'data-sort' attribute of the table cell headers determines the way that
   the column is sorted. The default is case-insensitive alphabetical comparison.
 
-  Note: during the sort, every other row is given a class of 'alt' - you can
-  use this to alternate background colours & etc.
-
+  Based on SORTABLE TABLES (for prototype.js) by Inventive Labs
   Based on tableSort.js by Inigo Surguy (http://surguy.net). This file is made
   available under the same Creative Commons Attribution-ShareAlike 2.5 license:
   http://creativecommons.org/licenses/by-sa/2.5/
----------------------------------------------------------------------------*/
+*/
+
+if (window.NodeList && !NodeList.prototype.forEach) {
+  NodeList.prototype.forEach = Array.prototype.forEach;
+}
+
 SortableTable = function (table) {
   var me = this;
 
   this.table = table;
-  this.rows = $A(table.tBodies[0].rows).map(function(r) { return $(r) });
-  this.headerRow = table.tHead ? $(table.tHead.rows[0]) : this.rows.shift();
-  this.headers = Selector.findChildElements(this.headerRow, ['th']);
+  this.rows  = [].slice.call(table.tBodies[0].rows);
+  this.headerRow = table.tHead ? table.tHead.rows[0] : this.rows.shift();
+  this.headers = this.headerRow.querySelectorAll('th');
 
-  this.headers.each(function(th) {
-    var span = $(document.createElement('span'));
-    $A(th.childNodes).each(function(c) { span.appendChild(c); });
+  this.headers.forEach(function(th) {
+    var span = document.createElement('span');
+    th.childNodes.forEach(function(c) { span.appendChild(c); });
     th.appendChild(span);
     span.onclick = function () { me.sortOnColumn(th, span) }
   });
 }
 
-SortableTable.find = function () {
-  $$('table.sortable').each(function(table) { new SortableTable(table) })
+SortableTable.find = function (sel) {
+  document.querySelectorAll(sel || 'table.sortable').forEach(function(table) { new SortableTable(table) })
 }
 
 SortableTable.prototype.simpleCompare = function(a,b) {
@@ -79,52 +81,50 @@ SortableTable.prototype.compareFunction = function (sType) {
   }
 }
 
+SortableTable.prototype.getText = function(e) {
+  return e.text = e.getAttribute('data-sortval')||e.text||e.textContent||e.innerText||e.innerHTML||''
+}
+
+SortableTable.prototype.getCellText = function(row, pos) {
+  row.cellTexts = row.cellTexts || [];
+  if (!row.cellTexts[pos]) {
+    try {
+      row.cellTexts[pos] = this.getText(row.querySelectorAll("td,th")[pos]);
+    } catch(err) {
+      row.cellTexts[pos] = '~~~~~~'; // last ASCII char
+    }
+  }
+  return row.cellTexts[pos];
+}
+
 SortableTable.prototype.sortOnColumn = function (th, span) {
   // figure out which column this is
-  var pos = $A(this.headerRow.cells).indexOf(th);
+  var pos = [].slice.call(this.headerRow.cells).indexOf(th);
 
-  this.headers.each( function(cell) { cell.removeClassName('sortup');   });
-  this.headers.each( function(cell) { cell.removeClassName('sortdown');   });
-  //this.headerRow.each( function(cell) { cell.removeClassName('sortdown'); });
-  //this.headerRow).removeClassName('sortdown');
+  this.headers.forEach( function(cell) { cell.classList.remove('sortup');   });
+  this.headers.forEach( function(cell) { cell.classList.remove('sortdown'); });
 
   // do the sort
   var sortFn = this.compareFunction(th.getAttribute('data-sort'));
-  span.order = span.order || 1;
+  span.order = span.order || 1
+  var me = this;
   this.rows.sort(
       function (rowA, rowB) {
-        return span.order * sortFn(rowA.getCellText(pos), rowB.getCellText(pos));
+        return span.order * sortFn(me.getCellText(rowA,pos), me.getCellText(rowB,pos));
       }
   );
   span.order *= -1;
-  th.addClassName((span.order == 1) ? 'sortup' : 'sortdown');
+  th.classList.add((span.order == 1) ? 'sortup' : 'sortdown');
 
   // rearrange the rows based on sort results
   var alt = 0;
   var tbody = this.table.tBodies[0];
-  this.rows.each(function(row) {
-    if ((alt += 1) % 2) {
-      if (!row.hasClassName('alt')) { row.addClassName('alt') }
-    } else {
-      row.removeClassName('alt');
-    }
+  this.rows.forEach(function(row) {
     tbody.appendChild(row);
   });
 }
 
-Element.addMethods({
-  getText:function(e){return e.text = e.getAttribute('data-sortval')||e.text||e.textContent||e.innerText||e.innerHTML||''},
-  getCellText: function(row, pos) {
-    row.cellTexts = row.cellTexts || [];
-    if (!row.cellTexts[pos]) {
-      try {
-        row.cellTexts[pos] = row.down("td,th", pos).getText();
-      } catch(err) {
-        row.cellTexts[pos] = '~~~~~~'; // last ASCII char
-      }
-    }
-    return row.cellTexts[pos];
-  }
-});
+// we initialize it directly in the document - see example.html
+// you can initialize it from here as well, however
 
-Event.observe(window, 'load', SortableTable.find, false);
+// document.addEventListener("DOMContentLoaded", function() { SortableTable.find('table.sortable'); });
