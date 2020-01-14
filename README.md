@@ -22,6 +22,9 @@ Plain.Sortable
 
   The 'data-sort' attribute of the table cell headers determines the way that
   the column is sorted. The default is case-insensitive alphabetical comparison.
+  
+  Posible values: date | float | integer | caseSensitive | STRING (default)
+
 
   ---
   * Based on SORTABLE TABLES (for prototype.js) by Inventive Labs
