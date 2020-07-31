@@ -29,6 +29,7 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 
 SortableTable = function (table) {
   var me = this;
+  var defaultsort = null;
 
   this.table = table;
   this.rows  = [].slice.call(table.tBodies[0].rows);
@@ -37,10 +38,20 @@ SortableTable = function (table) {
 
   this.headers.forEach(function(th) {
     var span = document.createElement('span');
-    th.childNodes.forEach(function(c) { span.appendChild(c); });
+    th.childNodes.forEach(function (c) {
+      span.appendChild(c);
+    });
     th.appendChild(span);
-    span.onclick = function () { me.sortOnColumn(th, span) }
+    span.onclick = function () {
+      me.sortOnColumn(th, span)
+    }
+    if (th.hasAttribute('data-sortdefault')) {
+      defaultsort = span;
+    }
   });
+  if (defaultsort) {
+      defaultsort.click();
+  }
 }
 
 SortableTable.find = function (sel) {

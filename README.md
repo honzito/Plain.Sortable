@@ -15,7 +15,7 @@ Plain.Sortable
       <tr>
         <th data-sort="integer">ID</th>
         <th>Summary</th>
-        <th data-sort="date">Occurred on</th>
+        <th data-sort="date" data-sortdefault>Occurred on</th>
       </tr>
       <tr> (some cells...) </tr>
      </table>
@@ -24,6 +24,8 @@ Plain.Sortable
   the column is sorted. The default is case-insensitive alphabetical comparison.
   
   Posible values: date | float | integer | caseSensitive | STRING (default)
+
+  The 'data-sortdefault' attribute of the table cell headers matches the (optional) default sort column
 
   Alternative HTML with THEAD and TFOOT:
   
