@@ -19,11 +19,30 @@ Plain.Sortable
       </tr>
       <tr> (some cells...) </tr>
      </table>
-
+     
   The 'data-sort' attribute of the table cell headers determines the way that
   the column is sorted. The default is case-insensitive alphabetical comparison.
   
   Posible values: date | float | integer | caseSensitive | STRING (default)
+
+  Alternative HTML with THEAD and TFOOT:
+  
+    <table class="sortable">
+      <thead>
+        <tr>
+          <th data-sort="integer">ID</th>
+          <th>Summary</th>
+          <th data-sort="date">Occurred on</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr> (some cells...) </tr>
+      </tbody>
+      <tfoot>
+        <tr> (some summary cells which will not be sorted...) </tr>
+      </tfoot>
+    </table>
+
 
 
   ---
