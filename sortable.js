@@ -37,16 +37,15 @@ SortableTable = function (table) {
   this.headers = this.headerRow.querySelectorAll('th');
 
   this.headers.forEach(function(th) {
-    var span = document.createElement('span');
-    th.childNodes.forEach(function (c) {
-      span.appendChild(c);
-    });
-    th.appendChild(span);
-    span.onclick = function () {
-      me.sortOnColumn(th, span)
+    var div = document.createElement('div');
+    div.innerHTML = th.innerHTML;
+    div.onclick = function () {
+      me.sortOnColumn(th, div)
     }
+    th.innerHTML = '';
+    th.appendChild(div);
     if (th.hasAttribute('data-sortdefault')) {
-      defaultsort = span;
+      defaultsort = div;
     }
   });
   if (defaultsort) {
@@ -83,7 +82,7 @@ SortableTable.prototype.compareFunction = function (sType) {
     case "float":
       // Similar, but permits floating points (.)
       return this.compareComposer(function(a) {
-        return parseFloat(a.replace(/\s/g,'').replace(/^.*?([\d\.]+).*$/,"$1"))
+        return parseFloat(a.replace(/\s/g,'').replace(/^.*?([\d.]+).*$/,"$1"))
       });
     case "date":
       // Expects an ISO date format "13 MAR 2006 10:17:02 GMT"
@@ -126,10 +125,9 @@ SortableTable.prototype.sortOnColumn = function (th, span) {
       }
   );
   span.order *= -1;
-  th.classList.add((span.order == 1) ? 'sortup' : 'sortdown');
+  th.classList.add((span.order === 1) ? 'sortup' : 'sortdown');
 
   // rearrange the rows based on sort results
-  var alt = 0;
   var tbody = this.table.tBodies[0];
   this.rows.forEach(function(row) {
     tbody.appendChild(row);
