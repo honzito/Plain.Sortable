@@ -25,7 +25,11 @@ Plain.Sortable
   
   Posible values: date | float | integer | caseSensitive | STRING (default)
 
-  The 'data-sortdefault' attribute of the table cell headers matches the (optional) default sort column
+  The 'data-sortdefault' attribute of the table cell headers matches 
+  the (optional) default sort column.
+  
+  The column is sorted by the text content in the cell or by the 'data-sortval' 
+  attribute if present.
 
   Alternative HTML with THEAD and TFOOT:
   
