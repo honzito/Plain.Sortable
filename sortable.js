@@ -15,9 +15,12 @@
     <tr> (some cells...) </tr>
   </table>
 
-S  The 'data-sort' attribute of the table cell headers determines the way that
+  The 'data-sort' attribute of the table cell headers determines the way that
   the column is sorted. The default is case-insensitive alphabetical comparison.
   Possible values: date | float | integer | caseSensitive | STRING (default)
+  
+  The column is sorted by the text content in the cell or by the 'data-sortval' 
+  attribute if present.
 
   Based on SORTABLE TABLES (for prototype.js) by Inventive Labs
   which is based on tableSort.js by Inigo Surguy (http://surguy.net).

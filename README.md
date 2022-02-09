@@ -20,13 +20,16 @@ Plain.Sortable
       <tr> (some cells...) </tr>
      </table>
      
-  The `data-sort` attribute of the table cell headers determines the way that
+  The 'data-sort' attribute of the table cell headers determines the way that
   the column is sorted. The default is case-insensitive alphabetical comparison.
   
-  Possible values: `date` | `float` | `integer` | `caseSensitive` | `STRING` (default)
+  Posible values: date | float | integer | caseSensitive | STRING (default)
 
   The `data-sortdefault` attribute of the table cell headers matches the (optional) default sort column.
   `data-sortdefault="d"` switch DESCENDING order of default column
+  
+  The column is sorted by the text content in the cell or by the 'data-sortval' 
+  attribute if present.
 
   Alternative HTML with THEAD and TFOOT:
   
