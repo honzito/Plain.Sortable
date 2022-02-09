@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 /*===========================================================================
   SORTABLE TABLES in plain JS
 
@@ -28,8 +30,9 @@ if (window.NodeList && !NodeList.prototype.forEach) {
 }
 
 SortableTable = function (table) {
-  var me = this;
-  var defaultsort = null;
+  var me  = this;
+  var ds  = null;
+  var dso = null;
 
   this.table = table;
   this.rows  = [].slice.call(table.tBodies[0].rows);
@@ -45,13 +48,17 @@ SortableTable = function (table) {
     th.innerHTML = '';
     th.appendChild(div);
     if (th.hasAttribute('data-sortdefault')) {
-      defaultsort = div;
+      ds  = div;
+      dso = (th.getAttribute('data-sortdefault')=='d')  // descending
     }
   });
-  if (defaultsort) {
-      defaultsort.click();
+  if (ds) {
+    ds.click();
   }
-}
+  if (dso) {  // second click
+    ds.click();
+  }
+}          
 
 SortableTable.find = function (sel) {
   document.querySelectorAll(sel || 'table.sortable').forEach(function(table) { new SortableTable(table) })
@@ -77,12 +84,12 @@ SortableTable.prototype.compareFunction = function (sType) {
     case "integer":
       // Extracts the first numeric part of a string
       return this.compareComposer(function(a) {
-        return parseInt(a.replace(/\s/g,'').replace(/^.*?(\d+).*$/,"$1"))
+        return parseInt(a.replace(/\s/g,'').replace(/^.*?(-?\d+).*$/,"$1"))
       });
     case "float":
       // Similar, but permits floating points (.)
       return this.compareComposer(function(a) {
-        return parseFloat(a.replace(/\s/g,'').replace(/^.*?([\d.]+).*$/,"$1"))
+        return parseFloat(a.replace(/\s/g,'').replace(/^.*?(-?[\d.]+).*$/,"$1"))
       });
     case "date":
       // Expects an ISO date format "13 MAR 2006 10:17:02 GMT"
