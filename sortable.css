@@ -1,5 +1,6 @@
 table.sortable th>div {
     background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAkAAAAMCAMAAACHgmeRAAAALVBMVEV2dnb///92dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnZ2dnaTkpKigSGBAAAAD3RSTlMAAAUHCSMnUlRhbnJ0d5UgQfy5AAAAOklEQVQIW02NSQ4AIAwCx7qv/3+uRtPUOUEIACBLuEgr7UrfE6l7CCMeG0eg5sfEKZ+y1Bq28i3r2wZjuAGpoaoXgAAAAABJRU5ErkJggg==) no-repeat right 4px;
+    background-position: right max(0px, .5lh - 6px);  /* the 12px icon centred on the first line, whatever the font */
     padding-right: 17px;
     cursor: pointer;
 }
